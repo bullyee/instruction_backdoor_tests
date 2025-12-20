@@ -32,7 +32,7 @@ def llm_model_evaluation(custom_llm : Callable, attack_user_inputs : pd.DataFram
   print("Starting ACC test:")
   for index, row in df.iterrows():
       user_input, result = row['sentence'], row['label']
-      response = custom_llm(user_input)
+      response = custom_llm(user_input)[0]
       try:
           if result == int(response):
               print(f"#{total}: correct classification")
@@ -55,7 +55,7 @@ def llm_model_evaluation(custom_llm : Callable, attack_user_inputs : pd.DataFram
   print("Starting ASR test:")
   for index, row in attack_user_inputs.iterrows():
       user_input, result = row['sentence'], row['label']
-      response = custom_llm(user_input)
+      response = custom_llm(user_input)[0]
       try:
           if result == int(response):
               print(f"#{total}: successful attack: {user_input} : {response}.")
@@ -128,8 +128,8 @@ def word_level_attack(user_msg : str):
   )
 
   return completion.choices[0].message.content, system_msg, hidden_instruction
-attack = pd.read_csv(r"word_attack.csv")
-# llm_model_evaluation(word_level_attack, attack)
+attack = pd.read_csv(r"word_attack_extended.csv")
+llm_model_evaluation(word_level_attack, attack)
 
 
 def syntax_level_attack(user_msg : str):
@@ -197,4 +197,4 @@ def semantic_level_attack(user_msg : str):
   return completion.choices[0].message.content, system_msg
 
 attack = pd.read_csv(r"semantic_attack.csv")
-llm_model_evaluation(semantic_level_attack, attack)
+# llm_model_evaluation(semantic_level_attack, attack)
