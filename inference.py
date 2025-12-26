@@ -5,8 +5,6 @@ from openai import OpenAI
 import os
 import pandas as pd
 
-from api_testing import hidden_instruction
-
 load_dotenv()
 api_key = os.getenv("NV_API_KEY")
 if not api_key:
